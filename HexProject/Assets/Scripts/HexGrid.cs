@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,7 +17,7 @@ public class HexGrid : MonoBehaviour
 
     //Canvas gridCanvas;
 
-   // HexMesh hexMesh;
+    // HexMesh hexMesh;
 
     [HideInInspector]
     public Color[] colors;

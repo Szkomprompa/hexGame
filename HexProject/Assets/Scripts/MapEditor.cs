@@ -11,7 +11,6 @@ public class MapEditor : MonoBehaviour
 
     void Awake()
     {
-        //colors = new Color[4];
         colors = grid.colors;
         SelectColor(0);
     }
