@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class HexGrid : MonoBehaviour
 {
@@ -15,9 +16,9 @@ public class HexGrid : MonoBehaviour
 
     public Text cellLabelPrefab;
 
-    //Canvas gridCanvas;
-
-    // HexMesh hexMesh;
+    public float noiseScale = 20.0f;
+    public float xNoiseOffset = 0f;
+    public float zNoiseOffset = 0f;
 
     [HideInInspector]
     public Color[] colors;
@@ -29,8 +30,7 @@ public class HexGrid : MonoBehaviour
     void Awake()
     {
         SetColors();
-        //gridCanvas = GetComponentInChildren<Canvas>();
-        //hexMesh = GetComponentInChildren<HexMesh>();
+        SetOffset();
 
         cellCountX = chunkCountX * HexMetrics.chunkSizeX;
         cellCountZ = chunkCountZ * HexMetrics.chunkSizeZ;
@@ -41,11 +41,6 @@ public class HexGrid : MonoBehaviour
         //GenerateLands(); Generate lands (random, continents, small amount of water) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
 
-    /*void Start()
-    {
-        hexMesh.Triangulate(cells);
-    }*/
-
     void CreateCell(int x, int z, int i)
     {
         Vector3 position;
@@ -54,13 +49,10 @@ public class HexGrid : MonoBehaviour
         position.z = z * (HexMetrics.outerRadius * 1.5f);
 
         HexCell cell = cells[i] = Instantiate<HexCell>(cellPrefab);
-        //cell.transform.SetParent(transform, false);
         cell.transform.localPosition = position;
         cell.coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
         cell.name = cellPrefab.name + " " + "( " + cell.coordinates.X + ", " + cell.coordinates.Y + ", " + cell.coordinates.Z + ")"; // ZMIENIC NA POPRAWNE
-        GenerateColor(cell);
-        //cell.Color = colors[DrawColorRandom()];
-        //making each tile water                            !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        cell.Color = colors[NoiseColor(CalculateNoise(x, z))];
 
         if (x > 0)
         {
@@ -104,19 +96,17 @@ public class HexGrid : MonoBehaviour
         int index = coordinates.X + coordinates.Z * cellCountX + coordinates.Z / 2;
         HexCell cell = cells[index];
         cell.Color = color;
-        //hexMesh.Triangulate(cells);
     }
 
-    int DrawColorRandom()
+    int NoiseColor(float perlinNoise)
     {
-        float rand = Random.Range(0.0f, 1.0f);
-        if (rand < 0.4f)
+        if (perlinNoise < 0.4f)
         {
             return 0;
-        } else if (rand < 0.7f)
+        } else if (perlinNoise < 0.7f)
         {
             return 1;
-        } else if (rand < 0.8f)
+        } else if (perlinNoise < 0.8f)
         {
             return 2;
         } else 
@@ -125,15 +115,19 @@ public class HexGrid : MonoBehaviour
         }
     }
 
-    void GenerateColor(HexCell cell)
+    float CalculateNoise(int x, int z)
     {
-        if (typeOfMap == 0)
-        {
-            cell.Color = colors[DrawColorRandom()];
-        } else if (typeOfMap == 1)
-        {
-            cell.Color = colors[0];
-        }
+        float xCord = (float)x / cellCountX * noiseScale + xNoiseOffset;
+        float zCord = (float)z / cellCountZ * noiseScale + zNoiseOffset;
+
+        float perlinValue = Mathf.PerlinNoise(xCord, zCord);
+        return perlinValue;
+    }
+
+    void SetOffset()
+    {
+        xNoiseOffset = Random.Range(0f, 999999f);
+        zNoiseOffset = Random.Range(0f, 999999f);
     }
 
     public void SetColors()

@@ -343,6 +343,9 @@ MonoBehaviour:
   typeOfMap: 0
   cellPrefab: {fileID: 2068457766760075000, guid: a4ac829aa0e97fe478929e29394f9759, type: 3}
   cellLabelPrefab: {fileID: 5788370553811228198, guid: 8bfd39894875bcb449b3635f739e3ad2, type: 3}
+  noiseScale: 5
+  xNoiseOffset: 0
+  zNoiseOffset: 0
   colors: []
   chunkPrefab: {fileID: 1960108384907268452, guid: 054aa8ac4a3c72444964654a140111db, type: 3}
 --- !u!4 &318385779
