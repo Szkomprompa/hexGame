@@ -29,7 +29,6 @@ public class HexGrid : MonoBehaviour
 
     void Awake()
     {
-        SetColors();
         SetOffset();
 
         cellCountX = chunkCountX * HexMetrics.chunkSizeX;
@@ -52,7 +51,7 @@ public class HexGrid : MonoBehaviour
         cell.transform.localPosition = position;
         cell.coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
         cell.name = cellPrefab.name + " " + "( " + cell.coordinates.X + ", " + cell.coordinates.Y + ", " + cell.coordinates.Z + ")"; // ZMIENIC NA POPRAWNE
-        cell.Color = colors[NoiseColor(CalculateNoise(x, z))];
+        cell.SetType(NoiseCellType(CalculateNoise(x,z)));
 
         if (x > 0)
         {
@@ -79,7 +78,6 @@ public class HexGrid : MonoBehaviour
         }
 
         Text label = Instantiate<Text>(cellLabelPrefab);
-        //label.rectTransform.SetParent(gridCanvas.transform, false);
         label.rectTransform.anchoredPosition =
             new Vector2(position.x, position.z);
         label.text = cell.coordinates.ToStringOnSeparateLines();
@@ -88,30 +86,33 @@ public class HexGrid : MonoBehaviour
         AddCellToChunk(x, z, cell);
     }
 
-    public void ColorCell(Vector3 position, Color color)
+    public void ColorCell(Vector3 position, HexType type) // color)
     {
         position = transform.InverseTransformPoint(position);
         HexCoordinates coordinates = HexCoordinates.FromPosition(position);
         Debug.Log("touched at " + coordinates.ToString());
         int index = coordinates.X + coordinates.Z * cellCountX + coordinates.Z / 2;
         HexCell cell = cells[index];
-        cell.Color = color;
+        cell.SetType(type);
     }
 
-    int NoiseColor(float perlinNoise)
+    HexType NoiseCellType(float perlinNoise)
     {
         if (perlinNoise < 0.4f)
         {
-            return 0;
-        } else if (perlinNoise < 0.7f)
+            return HexType.WATER;
+        }
+        else if (perlinNoise < 0.7f)
         {
-            return 1;
-        } else if (perlinNoise < 0.8f)
+            return HexType.PLAINS;
+        }
+        else if (perlinNoise < 0.8f)
         {
-            return 2;
-        } else 
-        { 
-            return 3;
+            return HexType.MOUNTAINS;
+        }
+        else
+        {
+            return HexType.WOODS;
         }
     }
 
@@ -128,15 +129,6 @@ public class HexGrid : MonoBehaviour
     {
         xNoiseOffset = Random.Range(0f, 999999f);
         zNoiseOffset = Random.Range(0f, 999999f);
-    }
-
-    public void SetColors()
-    {
-        colors = new Color[4];
-        colors[0] = new Color(0f,0f,1f,1f);
-        colors[1] = new Color(0.1f, 0.7f, 0f, 1f);
-        colors[2] = new Color(0.3f, 0.3f, 0.3f, 1f);
-        colors[3] = new Color(0f, 0.4f, 0f, 1f);
     }
 
     void CreateCells()

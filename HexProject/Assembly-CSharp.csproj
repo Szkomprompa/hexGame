@@ -66,6 +66,7 @@
     <Compile Include="Assets\Scripts\HexMetrics.cs" />
     <Compile Include="Assets\Scripts\HexMesh.cs" />
     <Compile Include="Assets\Scripts\HexCell.cs" />
+    <Compile Include="Assets\Scripts\HexType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\HexShader.shader" />
