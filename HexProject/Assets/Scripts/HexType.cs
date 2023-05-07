@@ -1,4 +1,4 @@
 public enum HexType
 {
-    WATER, PLAINS, WOODS, MOUNTAINS
+    WATER, PLAINS, WOODS, MOUNTAINS, HILL
 }

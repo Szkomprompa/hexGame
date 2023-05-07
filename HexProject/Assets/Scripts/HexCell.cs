@@ -82,6 +82,10 @@ public class HexCell : MonoBehaviour
                 break;
             case HexType.MOUNTAINS:
                 this.Color = new Color(0.3f, 0.3f, 0.3f, 1f);
+                this.Elevation = 3;
+                break;
+            case HexType.HILL:
+                this.Color = new Color(0.5f, 0.4f, 0.3f, 1f);
                 this.Elevation = 2;
                 break;
         }

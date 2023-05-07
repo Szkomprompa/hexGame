@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class MapEditor : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class MapEditor : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
         {
             HandleInput();
         }
@@ -45,6 +46,9 @@ public class MapEditor : MonoBehaviour
                 break;
             case 3:
                 activeType = HexType.MOUNTAINS;
+                break;
+            case 4:
+                activeType = HexType.HILL;
                 break;
         }
     }

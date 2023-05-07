@@ -35,7 +35,7 @@ public class HexGrid : MonoBehaviour
         //GenerateLands(); Generate lands (random, continents, small amount of water) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
 
-    void CreateCell(int x, int z, int i, PerlinNoise noise)
+    void CreateCell(int x, int z, int i, PerlinNoise heightNoise, PerlinNoise forestNoise)
     {
         Vector3 position;
         position.x = (x + z * 0.5f - z / 2) * (HexMetrics.innerRadius * 2f);
@@ -51,7 +51,12 @@ public class HexGrid : MonoBehaviour
         label.rectTransform.anchoredPosition = new Vector2(position.x, position.z);
         label.text = cell.coordinates.ToStringOnSeparateLines();
         cell.uiRect = label.rectTransform;
-        cell.SetType(NoiseCellType(noise.CalculateNoise(x, z, cellCountX * chunkCountX, cellCountZ * chunkCountZ)));
+
+        cell.SetType(HexTypeControler(heightNoise.CalculateNoise(x, z, cellCountX * chunkCountX, cellCountZ * chunkCountZ)));
+        if (cell.type == HexType.PLAINS && forestNoise.CalculateNoise(x, z, cellCountX * chunkCountX, cellCountZ * chunkCountZ) > 0.65f)
+        {
+            cell.SetType(HexType.WOODS);
+        }
 
         if (x > 0)
         {
@@ -96,7 +101,20 @@ public class HexGrid : MonoBehaviour
         cell.chunk.Refresh();
     }
 
-    HexType NoiseCellType(float perlinNoise)
+    HexType HexTypeControler(float perlinNoise)
+    {
+        switch (typeOfMap)
+        {
+            case 0:
+                return Classic(perlinNoise);
+            case 1:
+                return LowWaterLevel(perlinNoise);
+            default:
+                return HexType.WATER;
+        }
+    }
+
+    HexType Classic(float perlinNoise)
     {
         if (perlinNoise < 0.5f)
         {
@@ -108,7 +126,27 @@ public class HexGrid : MonoBehaviour
         }
         else if (perlinNoise < 0.9f)
         {
-            return HexType.WOODS;
+            return HexType.HILL;
+        }
+        else
+        {
+            return HexType.MOUNTAINS;
+        }
+    }
+
+    HexType LowWaterLevel(float perlinNoise)
+    {
+        if (perlinNoise < 0.2f)
+        {
+            return HexType.WATER;
+        }
+        else if (perlinNoise < 0.75f)
+        {
+            return HexType.PLAINS;
+        }
+        else if (perlinNoise < 0.9f)
+        {
+            return HexType.HILL;
         }
         else
         {
@@ -119,15 +157,18 @@ public class HexGrid : MonoBehaviour
     void CreateCells()
     {
         cells = new HexCell[cellCountZ * cellCountX];
-        PerlinNoise noise = new PerlinNoise();
-        noise.SetRandomOffset();
-        noise.SetScale(noiseScale);
+        PerlinNoise heightNoise = new PerlinNoise();
+        heightNoise.SetRandomOffset();
+        heightNoise.SetScale(noiseScale);
+        PerlinNoise forestNoise = new PerlinNoise();
+        forestNoise.SetRandomOffset();
+        forestNoise.SetScale(noiseScale);
 
         for (int z = 0, i = 0; z < cellCountZ; z++)
         {
             for (int x = 0; x < cellCountX; x++)
             {
-                CreateCell(x, z, i++, noise);
+                CreateCell(x, z, i++, heightNoise, forestNoise);
             }
         }
     }
