@@ -2,33 +2,21 @@ using UnityEngine;
 
 public class PerlinNoise : MonoBehaviour
 {
-    public int width = 256;
-    public int height = 256;
     public float scale = 20.0f;
     public float xOffset = 0f;
-    public float yOffset = 0f;
-
-    private void Start()
-    {
-        xOffset = Random.Range(0f, 99999f);
-        yOffset = Random.Range(0f, 99999f);
-    }
-
-    private void Update()
-    {
-        Renderer renderer = GetComponent<Renderer>();
-        renderer.material.mainTexture = GenerateTexture();
-    }
+    public float zOffset = 0f;
 
     Texture2D GenerateTexture()
     {
+        int width = 256, height = 256;
         Texture2D texture = new Texture2D(width, height);
 
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < width; y++)
             {
-                Color color = CalculateColor(x,y);
+                float perlinValue = CalculateNoise(x, y, width, height);
+                Color color = new Color(perlinValue, perlinValue, perlinValue);
                 texture.SetPixel(x, y, color);
             }
         }
@@ -37,12 +25,23 @@ public class PerlinNoise : MonoBehaviour
         return texture;
     }
 
-    Color CalculateColor(int x, int y)
+    public float CalculateNoise(int x, int y, int xSize, int ySize)
     {
-        float xCord = (float)x / width * scale + xOffset;
-        float yCord = (float)y / height * scale + yOffset;
+        float xCord = (float)x / xSize * scale + xOffset;
+        float yCord = (float)y / ySize * scale + zOffset;
 
         float perlinValue = Mathf.PerlinNoise(xCord,yCord);
-        return new Color(perlinValue, perlinValue, perlinValue);
+        return perlinValue;
+    }
+
+    public void SetRandomOffset()
+    {
+        xOffset = Random.Range(0f, 999999f);
+        zOffset = Random.Range(0f, 999999f);
+    }
+
+    public void SetScale(float scale)
+    {
+        this.scale = scale;
     }
 }

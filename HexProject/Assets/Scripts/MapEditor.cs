@@ -26,7 +26,7 @@ public class MapEditor : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(inputRay, out hit))
         {
-            grid.ColorCell(hit.point, activeType);
+            grid.EditCell(grid.ColorCell(hit.point), activeType);
         }
     }
 

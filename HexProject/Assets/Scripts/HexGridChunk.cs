@@ -20,11 +20,6 @@ public class HexGridChunk : MonoBehaviour
         neighbors = new HexGridChunk[4];
     }
 
-    void Start()
-    {
-        hexMesh.Triangulate(cells);
-    }
-
     public void AddCell(int index, HexCell cell)
     {
         cells[index] = cell;
@@ -35,7 +30,14 @@ public class HexGridChunk : MonoBehaviour
 
     public void Refresh()
     {
+        //		hexMesh.Triangulate(cells);
+        enabled = true;
+    }
+
+    void LateUpdate()
+    {
         hexMesh.Triangulate(cells);
+        enabled = false;
     }
 
     public HexGridChunk GetNeighbor(int direction)

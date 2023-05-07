@@ -31,7 +31,26 @@ public class HexCell : MonoBehaviour
 
     public HexType type;
 
-    public int elevation;
+    public int Elevation
+    {
+        get
+        {
+            return elevation;
+        }
+        set
+        {
+            elevation = value;
+            Vector3 position = transform.localPosition;
+            position.y = value * HexMetrics.elevationStep;
+            transform.localPosition = position;
+
+            Vector3 uiPosition = uiRect.localPosition;
+            uiPosition.z = elevation * -HexMetrics.elevationStep - 0.01f;
+            uiRect.localPosition = uiPosition;
+        }
+    }
+
+    private int elevation;
 
     public HexCell GetNeighbor(HexDirection direction)
     {
@@ -51,19 +70,19 @@ public class HexCell : MonoBehaviour
         {
             case HexType.WATER:
                 this.Color = new Color(0f, 0f, 1f, 1f);
-                this.elevation = 0;
+                this.Elevation = 0;
                 break;
             case HexType.PLAINS:
                 this.Color = new Color(0.1f, 0.7f, 0f, 1f);
-                this.elevation = 1;
+                this.Elevation = 1;
                 break;
             case HexType.WOODS:
                 this.Color = new Color(0f, 0.4f, 0f, 1f);
-                this.elevation = 1;
+                this.Elevation = 1;
                 break;
             case HexType.MOUNTAINS:
                 this.Color = new Color(0.3f, 0.3f, 0.3f, 1f);
-                this.elevation = 2;
+                this.Elevation = 2;
                 break;
         }
     }
@@ -73,6 +92,14 @@ public class HexCell : MonoBehaviour
         if (chunk)
         {
             chunk.Refresh();
+            for (int i = 0; i < neighbors.Length; i++)
+            {
+                HexCell neighbor = neighbors[i];
+                if (neighbor != null && neighbor.chunk != chunk)
+                {
+                    neighbor.chunk.Refresh();
+                }
+            }
         }
     }
 }

@@ -338,14 +338,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb799a2f8d6eb88408b39e469d08d63d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chunkCountX: 4
-  chunkCountZ: 3
+  chunkCountX: 8
+  chunkCountZ: 5
   typeOfMap: 0
+  noiseScale: 200
   cellPrefab: {fileID: 2068457766760075000, guid: a4ac829aa0e97fe478929e29394f9759, type: 3}
   cellLabelPrefab: {fileID: 5788370553811228198, guid: 8bfd39894875bcb449b3635f739e3ad2, type: 3}
-  noiseScale: 5
-  xNoiseOffset: 0
-  zNoiseOffset: 0
   colors: []
   chunkPrefab: {fileID: 1960108384907268452, guid: 054aa8ac4a3c72444964654a140111db, type: 3}
 --- !u!4 &318385779

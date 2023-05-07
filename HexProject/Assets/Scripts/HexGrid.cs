@@ -9,16 +9,13 @@ public class HexGrid : MonoBehaviour
     public int typeOfMap = 0;
 
     int cellCountX, cellCountZ;
+    public float noiseScale = 5f;
 
     public HexCell cellPrefab;
 
     HexCell[] cells;
 
     public Text cellLabelPrefab;
-
-    public float noiseScale = 20.0f;
-    public float xNoiseOffset = 0f;
-    public float zNoiseOffset = 0f;
 
     [HideInInspector]
     public Color[] colors;
@@ -29,8 +26,6 @@ public class HexGrid : MonoBehaviour
 
     void Awake()
     {
-        SetOffset();
-
         cellCountX = chunkCountX * HexMetrics.chunkSizeX;
         cellCountZ = chunkCountZ * HexMetrics.chunkSizeZ;
 
@@ -40,7 +35,7 @@ public class HexGrid : MonoBehaviour
         //GenerateLands(); Generate lands (random, continents, small amount of water) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
 
-    void CreateCell(int x, int z, int i)
+    void CreateCell(int x, int z, int i, PerlinNoise noise)
     {
         Vector3 position;
         position.x = (x + z * 0.5f - z / 2) * (HexMetrics.innerRadius * 2f);
@@ -51,7 +46,12 @@ public class HexGrid : MonoBehaviour
         cell.transform.localPosition = position;
         cell.coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
         cell.name = cellPrefab.name + " " + "( " + cell.coordinates.X + ", " + cell.coordinates.Y + ", " + cell.coordinates.Z + ")"; // ZMIENIC NA POPRAWNE
-        cell.SetType(NoiseCellType(CalculateNoise(x,z)));
+
+        Text label = Instantiate<Text>(cellLabelPrefab);
+        label.rectTransform.anchoredPosition = new Vector2(position.x, position.z);
+        label.text = cell.coordinates.ToStringOnSeparateLines();
+        cell.uiRect = label.rectTransform;
+        cell.SetType(NoiseCellType(noise.CalculateNoise(x, z, cellCountX * chunkCountX, cellCountZ * chunkCountZ)));
 
         if (x > 0)
         {
@@ -77,69 +77,57 @@ public class HexGrid : MonoBehaviour
             }
         }
 
-        Text label = Instantiate<Text>(cellLabelPrefab);
-        label.rectTransform.anchoredPosition =
-            new Vector2(position.x, position.z);
-        label.text = cell.coordinates.ToStringOnSeparateLines();
-        cell.uiRect = label.rectTransform;
-
         AddCellToChunk(x, z, cell);
     }
 
-    public void ColorCell(Vector3 position, HexType type) // color)
+    public HexCell ColorCell(Vector3 position) // color)
     {
         position = transform.InverseTransformPoint(position);
         HexCoordinates coordinates = HexCoordinates.FromPosition(position);
         Debug.Log("touched at " + coordinates.ToString());
         int index = coordinates.X + coordinates.Z * cellCountX + coordinates.Z / 2;
-        HexCell cell = cells[index];
+        return cells[index];
+    }
+
+
+    public void EditCell(HexCell cell, HexType type)
+    {
         cell.SetType(type);
+        cell.chunk.Refresh();
     }
 
     HexType NoiseCellType(float perlinNoise)
     {
-        if (perlinNoise < 0.4f)
+        if (perlinNoise < 0.5f)
         {
             return HexType.WATER;
         }
-        else if (perlinNoise < 0.7f)
+        else if (perlinNoise < 0.75f)
         {
             return HexType.PLAINS;
         }
-        else if (perlinNoise < 0.8f)
-        {
-            return HexType.MOUNTAINS;
-        }
-        else
+        else if (perlinNoise < 0.9f)
         {
             return HexType.WOODS;
         }
-    }
-
-    float CalculateNoise(int x, int z)
-    {
-        float xCord = (float)x / cellCountX * noiseScale + xNoiseOffset;
-        float zCord = (float)z / cellCountZ * noiseScale + zNoiseOffset;
-
-        float perlinValue = Mathf.PerlinNoise(xCord, zCord);
-        return perlinValue;
-    }
-
-    void SetOffset()
-    {
-        xNoiseOffset = Random.Range(0f, 999999f);
-        zNoiseOffset = Random.Range(0f, 999999f);
+        else
+        {
+            return HexType.MOUNTAINS;
+        }
     }
 
     void CreateCells()
     {
         cells = new HexCell[cellCountZ * cellCountX];
+        PerlinNoise noise = new PerlinNoise();
+        noise.SetRandomOffset();
+        noise.SetScale(noiseScale);
 
         for (int z = 0, i = 0; z < cellCountZ; z++)
         {
             for (int x = 0; x < cellCountX; x++)
             {
-                CreateCell(x, z, i++);
+                CreateCell(x, z, i++, noise);
             }
         }
     }
