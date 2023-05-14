@@ -355,6 +355,10 @@
 "Assets/Scripts/HexMetrics.cs"
 "Assets/Scripts/HexType.cs"
 "Assets/Scripts/MapEditor.cs"
+"Assets/Scripts/Noise.cs"
+"Assets/Scripts/NoiseMapDisplay.cs"
+"Assets/Scripts/NoiseMapGenerator.cs"
+"Assets/Scripts/NoiseMapGeneratorEditor.cs"
 "Assets/Scripts/PerlinNoise.cs"
 -langversion:9.0
 

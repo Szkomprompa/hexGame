@@ -30,6 +30,7 @@ public class HexCell : MonoBehaviour
     HexCell[] neighbors;
 
     public HexType type;
+    public int movementCost;
 
     public int Elevation
     {
@@ -71,22 +72,27 @@ public class HexCell : MonoBehaviour
             case HexType.WATER:
                 this.Color = new Color(0f, 0f, 1f, 1f);
                 this.Elevation = 0;
+                this.movementCost = 1;
                 break;
             case HexType.PLAINS:
                 this.Color = new Color(0.1f, 0.7f, 0f, 1f);
                 this.Elevation = 1;
+                this.movementCost = 1;
                 break;
             case HexType.WOODS:
                 this.Color = new Color(0f, 0.4f, 0f, 1f);
                 this.Elevation = 1;
+                this.movementCost = 2;
                 break;
             case HexType.MOUNTAINS:
                 this.Color = new Color(0.3f, 0.3f, 0.3f, 1f);
                 this.Elevation = 3;
+                this.movementCost = 3;
                 break;
             case HexType.HILL:
                 this.Color = new Color(0.5f, 0.4f, 0.3f, 1f);
                 this.Elevation = 2;
+                this.movementCost = 2;
                 break;
         }
     }

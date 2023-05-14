@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\HexCoordinates.cs" />
+    <Compile Include="Assets\Scripts\Noise.cs" />
     <Compile Include="Assets\Scripts\HexMapCamera.cs" />
     <Compile Include="Assets\Scripts\HexDirection.cs" />
     <Compile Include="Assets\Scripts\MapEditor.cs" />
@@ -67,6 +68,9 @@
     <Compile Include="Assets\Scripts\HexMesh.cs" />
     <Compile Include="Assets\Scripts\HexCell.cs" />
     <Compile Include="Assets\Scripts\HexType.cs" />
+    <Compile Include="Assets\Scripts\NoiseMapDisplay.cs" />
+    <Compile Include="Assets\Scripts\NoiseMapGenerator.cs" />
+    <Compile Include="Assets\Scripts\NoiseMapGeneratorEditor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\HexShader.shader" />

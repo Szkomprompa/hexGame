@@ -9,7 +9,6 @@ public class HexGrid : MonoBehaviour
     public int typeOfMap = 0;
 
     int cellCountX, cellCountZ;
-    public float noiseScale = 5f;
 
     public HexCell cellPrefab;
 
@@ -22,17 +21,33 @@ public class HexGrid : MonoBehaviour
 
     public HexGridChunk chunkPrefab;
 
+    public bool randomSeed = true;
+    public int seed = 20;
+    public float noiseScale = 1.0f;
+    public int octaves = 3;
+    [Range(0, 1)]
+    public float persistance = 0.5f;
+    public float lacunarity = 2.0f;
+    public int offsetX, offsetZ;
+
+    float[,] noise;
+
     HexGridChunk[] chunks;
 
     void Awake()
     {
         cellCountX = chunkCountX * HexMetrics.chunkSizeX;
         cellCountZ = chunkCountZ * HexMetrics.chunkSizeZ;
+        Vector2 offset = new Vector2 (offsetX, offsetZ);
+
+        if(randomSeed)
+        {
+            seed = Random.Range(0, 999999);
+        }
+        noise = Noise.GenerateNoiseMap(cellCountX, cellCountZ, seed, noiseScale,octaves, persistance, lacunarity, offset);
 
         CreateChunks();
         CreateCells();
-
-        //GenerateLands(); Generate lands (random, continents, small amount of water) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
 
     void CreateCell(int x, int z, int i, PerlinNoise heightNoise, PerlinNoise forestNoise)
@@ -52,11 +67,12 @@ public class HexGrid : MonoBehaviour
         label.text = cell.coordinates.ToStringOnSeparateLines();
         cell.uiRect = label.rectTransform;
 
-        cell.SetType(HexTypeControler(heightNoise.CalculateNoise(x, z, cellCountX * chunkCountX, cellCountZ * chunkCountZ)));
+        cell.SetType(HexTypeControler(noise[x, z])); 
+        /*cell.SetType(HexTypeControler(heightNoise.CalculateNoise(x, z, cellCountX * chunkCountX, cellCountZ * chunkCountZ)));
         if (cell.type == HexType.PLAINS && forestNoise.CalculateNoise(x, z, cellCountX * chunkCountX, cellCountZ * chunkCountZ) > 0.65f)
         {
             cell.SetType(HexType.WOODS);
-        }
+        }*/
 
         if (x > 0)
         {
@@ -181,14 +197,12 @@ public class HexGrid : MonoBehaviour
         {
             for (int x = 0; x < chunkCountX; x++)
             {
-                Debug.Log(i);
                 HexGridChunk chunk = chunks[i++] = Instantiate(chunkPrefab);
                 chunk.transform.SetParent(transform);
                 chunk.name = "Chunk " + "( " + x + ", " + z + ")";
 
                 if (x > 0)
                 {
-                    Debug.Log(i + ", " + x + ", " + z);
                     chunk.SetNeighbor( 0, chunks[i - 2]);
                 }
                 if (z > 0)
