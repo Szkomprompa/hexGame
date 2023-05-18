@@ -8,6 +8,10 @@ public class MapEditor : MonoBehaviour
     private Color activeColor;
     private HexType activeType;
 
+    public HexUnit unitPrefab;
+    bool editMode;
+
+
     void Awake()
     {
         SelectType(0);
@@ -15,19 +19,39 @@ public class MapEditor : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
+        //if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
+        //{
+        //    HandleInput();
+        //}
+
+        if (!EventSystem.current.IsPointerOverGameObject())
         {
-            HandleInput();
+            if (Input.GetMouseButton(0))
+            {
+                HandleInput();
+                return;
+            }
+            if (Input.GetKeyDown(KeyCode.U))
+            {
+                CreateUnit();
+                return;
+            }
         }
     }
 
     void HandleInput()
     {
-        Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        if (Physics.Raycast(inputRay, out hit))
+        HexCell currentCell = GetCellUnderCursor();
+        if (currentCell)
         {
-            grid.EditCell(grid.ColorCell(hit.point), activeType);
+            if (editMode)
+            {
+                grid.EditCell(currentCell, activeType);
+            }
+            else
+            {
+                grid.FindDistancesTo(currentCell);
+            }
         }
     }
 
@@ -50,6 +74,33 @@ public class MapEditor : MonoBehaviour
             case 4:
                 activeType = HexType.HILL;
                 break;
+        }
+    }
+
+    public void SetEditMode(bool toggle)
+    {
+        editMode = !editMode;//toggle;
+    }
+
+    HexCell GetCellUnderCursor()
+    {
+        Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(inputRay, out hit))
+        {
+            return grid.GetCell(hit.point);
+        }
+        return null;
+    }
+
+    void CreateUnit()
+    {
+        HexCell cell = GetCellUnderCursor();
+        if (cell)
+        {
+            HexUnit unit = Instantiate(unitPrefab);
+            unit.transform.SetParent(grid.transform, false);
+            unit.Location = cell;
         }
     }
 }

@@ -354,6 +354,7 @@
 "Assets/Scripts/HexMesh.cs"
 "Assets/Scripts/HexMetrics.cs"
 "Assets/Scripts/HexType.cs"
+"Assets/Scripts/HexUnit.cs"
 "Assets/Scripts/MapEditor.cs"
 "Assets/Scripts/Noise.cs"
 "Assets/Scripts/NoiseMapDisplay.cs"

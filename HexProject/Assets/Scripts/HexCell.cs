@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HexCell : MonoBehaviour 
 {
@@ -30,7 +31,22 @@ public class HexCell : MonoBehaviour
     HexCell[] neighbors;
 
     public HexType type;
+
     public int movementCost;
+
+    public int Distance
+    {
+        get
+        {
+            return distance;
+        }
+        set
+        {
+            distance = value;
+            UpdateDistanceLabel();
+        }
+    }
+    int distance;
 
     public int Elevation
     {
@@ -50,7 +66,6 @@ public class HexCell : MonoBehaviour
             uiRect.localPosition = uiPosition;
         }
     }
-
     private int elevation;
 
     public HexCell GetNeighbor(HexDirection direction)
@@ -111,5 +126,11 @@ public class HexCell : MonoBehaviour
                 }
             }
         }
+    }
+
+    void UpdateDistanceLabel()
+    {
+        Text label = uiRect.GetComponent<Text>();
+        label.text = distance == int.MaxValue ? "" : distance.ToString();
     }
 }

@@ -21,11 +21,13 @@ Shader "Custom/HexShader"
         #pragma target 3.0
 
         sampler2D _MainTex;
+        //sampler2D _GridTex;
 
         struct Input
         {
             float2 uv_MainTex;
             float4 color : COLOR;
+            //float3 worldPos;
         };
 
         half _Glossiness;
@@ -43,6 +45,17 @@ Shader "Custom/HexShader"
         {
             // Albedo comes from a texture tinted by color
             fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
+
+            /*
+            IN.worldPos.x -= 9.673905;
+            IN.worldPos.z -= 4.592718;
+            float2 gridUV = IN.worldPos.xz;
+			gridUV.x *= 1 / (4 * 8.66025404);
+			gridUV.y *= 1 / (2 * 15.0);
+            fixed4 grid = tex2D(_GridTex, gridUV);
+
+            o.Albedo = c.rgb * grid * _Color;
+            */
             o.Albedo = c.rgb * IN.color;
             // Metallic and smoothness come from slider variables
             o.Metallic = _Metallic;

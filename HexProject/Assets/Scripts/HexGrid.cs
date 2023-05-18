@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public class HexGrid : MonoBehaviour
 {
@@ -64,7 +67,7 @@ public class HexGrid : MonoBehaviour
 
         Text label = Instantiate<Text>(cellLabelPrefab);
         label.rectTransform.anchoredPosition = new Vector2(position.x, position.z);
-        label.text = cell.coordinates.ToStringOnSeparateLines();
+        //label.text = cell.coordinates.ToStringOnSeparateLines();
         cell.uiRect = label.rectTransform;
 
         cell.SetType(HexTypeControler(noise[x, z])); 
@@ -101,7 +104,7 @@ public class HexGrid : MonoBehaviour
         AddCellToChunk(x, z, cell);
     }
 
-    public HexCell ColorCell(Vector3 position) // color)
+    public HexCell GetCell(Vector3 position) // color)
     {
         position = transform.InverseTransformPoint(position);
         HexCoordinates coordinates = HexCoordinates.FromPosition(position);
@@ -222,5 +225,52 @@ public class HexGrid : MonoBehaviour
         int localX = x - chunkX * HexMetrics.chunkSizeX;
         int localZ = z - chunkZ * HexMetrics.chunkSizeZ;
         chunk.AddCell(localX + localZ * HexMetrics.chunkSizeX, cell);
+    }
+
+    public void FindDistancesTo(HexCell cell)
+    {
+        StopAllCoroutines();
+        StartCoroutine(Search(cell));
+    }
+
+    IEnumerator Search(HexCell cell)
+    {
+        for (int i = 0; i < cells.Length; i++)
+        {
+            cells[i].Distance = int.MaxValue;
+        }
+        WaitForSeconds delay = new WaitForSeconds(1 / 60f);
+        List<HexCell> queue = new List<HexCell>();
+        cell.Distance = 0;
+        queue.Add(cell);
+        while (queue.Count > 0)
+        {
+            yield return delay;
+            HexCell current = queue[0];
+            queue.RemoveAt(0);
+            for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++)
+            {
+                HexCell neighbor = current.GetNeighbor(d);
+                if (neighbor == null)
+                {
+                    continue;
+                }
+                if (neighbor.type == HexType.WATER)
+                {
+                    continue;
+                }
+                int distance = current.Distance + neighbor.movementCost;        //neighbor.Distance = current.Distance + 1;   //     nie œmiga/trzeba pomyœleæ
+                if (neighbor.Distance == int.MaxValue)
+                {
+                    neighbor.Distance = distance;
+                    queue.Add(neighbor);
+                }
+                else if (distance < neighbor.Distance)
+                {
+                    neighbor.Distance = distance;
+                }
+                queue.Sort((x, y) => x.Distance.CompareTo(y.Distance));
+            }
+        }
     }
 }
