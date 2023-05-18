@@ -68,6 +68,8 @@ public class HexCell : MonoBehaviour
     }
     private int elevation;
 
+    public HexUnit Unit { get; set; }
+
     public HexCell GetNeighbor(HexDirection direction)
     {
         return neighbors[(int)direction];
@@ -77,6 +79,14 @@ public class HexCell : MonoBehaviour
     {
         neighbors[(int)direction] = cell;
         cell.neighbors[(int)direction.Opposite()] = this;
+    }
+
+    public Vector3 Position
+    {
+        get
+        {
+            return transform.localPosition;
+        }
     }
 
     public void SetType(HexType type) 
@@ -124,6 +134,11 @@ public class HexCell : MonoBehaviour
                 {
                     neighbor.chunk.Refresh();
                 }
+            }
+
+            if (Unit)
+            {
+                Unit.ValidateLocation();
             }
         }
     }

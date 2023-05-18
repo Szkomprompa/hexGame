@@ -11,9 +11,20 @@ public class HexUnit : MonoBehaviour
         set
         {
             location = value;
-            transform.localPosition = new Vector3();//value.Position;
+            value.Unit = this;
+            transform.localPosition = value.Position;
         }
     }
-
     HexCell location;
+
+    public void ValidateLocation()
+    {
+        transform.localPosition = location.Position;
+    }
+
+    public void Die()
+    {
+        location.Unit = null;
+        Destroy(gameObject);
+    }
 }

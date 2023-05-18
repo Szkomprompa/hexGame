@@ -70,13 +70,13 @@ public class HexGrid : MonoBehaviour
         //label.text = cell.coordinates.ToStringOnSeparateLines();
         cell.uiRect = label.rectTransform;
 
-        cell.SetType(HexTypeControler(noise[x, z])); 
+        cell.SetType(HexTypeControler(noise[x, z]));
         /*cell.SetType(HexTypeControler(heightNoise.CalculateNoise(x, z, cellCountX * chunkCountX, cellCountZ * chunkCountZ)));
         if (cell.type == HexType.PLAINS && forestNoise.CalculateNoise(x, z, cellCountX * chunkCountX, cellCountZ * chunkCountZ) > 0.65f)
         {
             cell.SetType(HexType.WOODS);
-        }*/
-
+        }
+        */
         if (x > 0)
         {
             cell.SetNeighbor(HexDirection.W, cells[i - 1]);

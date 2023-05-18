@@ -33,7 +33,14 @@ public class MapEditor : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.U))
             {
-                CreateUnit();
+                if (Input.GetKey(KeyCode.LeftShift))
+                {
+                    DestroyUnit();
+                }
+                else
+                {
+                    CreateUnit();
+                }
                 return;
             }
         }
@@ -96,11 +103,20 @@ public class MapEditor : MonoBehaviour
     void CreateUnit()
     {
         HexCell cell = GetCellUnderCursor();
-        if (cell)
+        if (cell && !cell.Unit)
         {
             HexUnit unit = Instantiate(unitPrefab);
             unit.transform.SetParent(grid.transform, false);
             unit.Location = cell;
+        }
+    }
+
+    void DestroyUnit()
+    {
+        HexCell cell = GetCellUnderCursor();
+        if (cell && cell.Unit)
+        {
+            cell.Unit.Die();
         }
     }
 }
