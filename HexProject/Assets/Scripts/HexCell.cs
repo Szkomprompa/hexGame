@@ -70,6 +70,20 @@ public class HexCell : MonoBehaviour
 
     public HexUnit Unit { get; set; }
 
+    public HexCell Parent { get; set; }
+
+    public int SearchHeuristic { get; set; }
+
+    public int SearchPriority
+    {
+        get
+        {
+            return distance + SearchHeuristic;
+        }
+    }
+
+    public HexCell NextWithSamePriority { get; set; }
+
     public HexCell GetNeighbor(HexDirection direction)
     {
         return neighbors[(int)direction];
@@ -147,5 +161,18 @@ public class HexCell : MonoBehaviour
     {
         Text label = uiRect.GetComponent<Text>();
         label.text = distance == int.MaxValue ? "" : distance.ToString();
+    }
+
+    public void DisableHighlight()
+    {
+        Image highlight = uiRect.GetChild(0).GetComponent<Image>();
+        highlight.enabled = false;
+    }
+
+    public void EnableHighlight(Color color)
+    {
+        Image highlight = uiRect.GetChild(0).GetComponent<Image>();
+        highlight.color = color;
+        highlight.enabled = true;
     }
 }

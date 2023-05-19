@@ -11,6 +11,7 @@ public class MapEditor : MonoBehaviour
     public HexUnit unitPrefab;
     bool editMode;
 
+    HexCell previousCell, searchFromCell, searchToCell;
 
     void Awake()
     {
@@ -55,9 +56,23 @@ public class MapEditor : MonoBehaviour
             {
                 grid.EditCell(currentCell, activeType);
             }
-            else
+            else if (Input.GetKey(KeyCode.LeftShift) && searchToCell != currentCell)
             {
-                grid.FindDistancesTo(currentCell);
+                if (searchFromCell)
+                {
+                    searchFromCell.DisableHighlight();
+                }
+                searchFromCell = currentCell;
+                searchFromCell.EnableHighlight(Color.blue);
+                if (searchToCell)
+                {
+                    grid.FindPath(searchFromCell, searchToCell);
+                }
+            }
+            else if (searchFromCell && searchFromCell != currentCell)
+            {
+                searchToCell = currentCell;
+                grid.FindPath(searchFromCell, searchToCell);
             }
         }
     }
