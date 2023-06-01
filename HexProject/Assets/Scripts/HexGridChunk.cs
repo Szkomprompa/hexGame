@@ -40,6 +40,11 @@ public class HexGridChunk : MonoBehaviour
         enabled = false;
     }
 
+    public void ShowUI(bool visible)
+    {
+        gridCanvas.gameObject.SetActive(visible);
+    }
+
     public HexGridChunk GetNeighbor(int direction)
     {
         return neighbors[direction];

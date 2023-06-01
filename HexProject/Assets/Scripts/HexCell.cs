@@ -74,6 +74,8 @@ public class HexCell : MonoBehaviour
 
     public int SearchHeuristic { get; set; }
 
+    public int SearchPhase { get; set; }
+
     public int SearchPriority
     {
         get

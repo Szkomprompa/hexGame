@@ -61,8 +61,8 @@ public class HexCellPriorityQueue
                 current = next;
                 next = current.NextWithSamePriority;
             }
+            current.NextWithSamePriority = cell.NextWithSamePriority;
         }
-        current.NextWithSamePriority = cell.NextWithSamePriority;
         Enqueue(cell);
         count -= 1;
     }

@@ -9,22 +9,19 @@ public class MapEditor : MonoBehaviour
     private HexType activeType;
 
     public HexUnit unitPrefab;
-    bool editMode;
+    //bool editMode;
 
-    HexCell previousCell, searchFromCell, searchToCell;
+    //  HexCell previousCell, searchFromCell, searchToCell;
+    HexCell previousCell;
 
     void Awake()
     {
         SelectType(0);
+        SetEditMode(false);
     }
 
     void Update()
     {
-        //if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
-        //{
-        //    HandleInput();
-        //}
-
         if (!EventSystem.current.IsPointerOverGameObject())
         {
             if (Input.GetMouseButton(0))
@@ -52,7 +49,8 @@ public class MapEditor : MonoBehaviour
         HexCell currentCell = GetCellUnderCursor();
         if (currentCell)
         {
-            if (editMode)
+            grid.EditCell(currentCell, activeType);
+            /*if (editMode)
             {
                 grid.EditCell(currentCell, activeType);
             }
@@ -79,7 +77,7 @@ public class MapEditor : MonoBehaviour
                     searchToCell = currentCell;
                     grid.FindPath(searchFromCell, searchToCell, 4);
                 }
-            }
+            }*/
         }
     }
 
@@ -107,18 +105,12 @@ public class MapEditor : MonoBehaviour
 
     public void SetEditMode(bool toggle)
     {
-        editMode = !editMode;//toggle;
+        enabled = toggle;
     }
 
     HexCell GetCellUnderCursor()
     {
-        Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        if (Physics.Raycast(inputRay, out hit))
-        {
-            return grid.GetCell(hit.point);
-        }
-        return null;
+        return grid.GetCell(Camera.main.ScreenPointToRay(Input.mousePosition));
     }
 
     void CreateUnit()
@@ -126,9 +118,7 @@ public class MapEditor : MonoBehaviour
         HexCell cell = GetCellUnderCursor();
         if (cell && !cell.Unit)
         {
-            HexUnit unit = Instantiate(unitPrefab);
-            unit.transform.SetParent(grid.transform, false);
-            unit.Location = cell;
+            grid.AddUnit(Instantiate(unitPrefab), cell, Random.Range(0f, 360f));
         }
     }
 
@@ -137,7 +127,7 @@ public class MapEditor : MonoBehaviour
         HexCell cell = GetCellUnderCursor();
         if (cell && cell.Unit)
         {
-            cell.Unit.Die();
+            grid.RemoveUnit(cell.Unit);
         }
     }
 }
