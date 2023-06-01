@@ -9,6 +9,7 @@ public class MapEditor : MonoBehaviour
     private HexType activeType;
 
     public HexUnit unitPrefab;
+    public HexCity cityPrefab;
     //bool editMode;
 
     //  HexCell previousCell, searchFromCell, searchToCell;
@@ -38,6 +39,18 @@ public class MapEditor : MonoBehaviour
                 else
                 {
                     CreateUnit();
+                }
+                return;
+            }
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                if (Input.GetKey(KeyCode.LeftShift))
+                {
+                    DestroyCity();
+                }
+                else
+                {
+                    CreateCity();
                 }
                 return;
             }
@@ -128,6 +141,24 @@ public class MapEditor : MonoBehaviour
         if (cell && cell.Unit)
         {
             grid.RemoveUnit(cell.Unit);
+        }
+    }
+
+    void CreateCity()
+    {
+        HexCell cell = GetCellUnderCursor();
+        if (cell && !cell.City)
+        {
+            grid.AddCity(Instantiate(cityPrefab), cell);
+        }
+    }
+
+    void DestroyCity()
+    {
+        HexCell cell = GetCellUnderCursor();
+        if (cell && cell.City)
+        {
+            grid.RemoveCity(cell.City);
         }
     }
 }

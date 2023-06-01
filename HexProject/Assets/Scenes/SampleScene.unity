@@ -452,6 +452,7 @@ MonoBehaviour:
   lacunarity: 2
   offsetX: 16
   offsetZ: 15
+  unitPrefab: {fileID: 0}
 --- !u!4 &318385779
 Transform:
   m_ObjectHideFlags: 0
@@ -1337,6 +1338,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grid: {fileID: 318385778}
   unitPrefab: {fileID: 3473939872528184404, guid: 7f427d3dad16c35449f6c775d0e4294d, type: 3}
+  cityPrefab: {fileID: -6902982212663063722, guid: d9bd721ed9f817b4c963d2524d5a18f5, type: 3}
 --- !u!114 &940887068
 MonoBehaviour:
   m_ObjectHideFlags: 0

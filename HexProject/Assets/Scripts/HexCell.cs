@@ -70,6 +70,8 @@ public class HexCell : MonoBehaviour
 
     public HexUnit Unit { get; set; }
 
+    public HexCity City { get; set; }
+
     public HexCell Parent { get; set; }
 
     public int SearchHeuristic { get; set; }

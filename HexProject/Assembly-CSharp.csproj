@@ -65,6 +65,7 @@
     <Compile Include="Assets\Scripts\PerlinNoise.cs" />
     <Compile Include="Assets\Scripts\HexGridChunk.cs" />
     <Compile Include="Assets\Scripts\NoiseMapGenerator.cs" />
+    <Compile Include="Assets\Scripts\ListPool.cs" />
     <Compile Include="Assets\Scripts\NoiseMapDisplay.cs" />
     <Compile Include="Assets\Scripts\HexCellPriorityQueue.cs" />
     <Compile Include="Assets\Scripts\HexGrid.cs" />
@@ -74,8 +75,7 @@
     <Compile Include="Assets\Scripts\HexCell.cs" />
     <Compile Include="Assets\Scripts\HexType.cs" />
     <Compile Include="Assets\Scripts\HexUnit.cs" />
-    <Compile Include="Assets\Scripts\ListPool.cs" />
-    <Compile Include="Assets\Scripts\Bezier.cs" />
+    <Compile Include="Assets\Scripts\HexCity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\HexShader.shader" />

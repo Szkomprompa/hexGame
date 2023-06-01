@@ -55,6 +55,8 @@ public class HexGrid : MonoBehaviour
 
     List<HexUnit> units = new List<HexUnit>();
 
+    List<HexCity> cities = new List<HexCity>();
+
     void Awake()
     {
         cellCountX = chunkCountX * HexMetrics.chunkSizeX;
@@ -285,6 +287,19 @@ public class HexGrid : MonoBehaviour
     {
         units.Remove(unit);
         unit.Die();
+    }
+
+    public void AddCity(HexCity city, HexCell location)
+    {
+        cities.Add(city);
+        city.transform.SetParent(transform, false);
+        city.Location = location;
+    }
+
+    public void RemoveCity(HexCity city)
+    {
+        cities.Remove(city);
+        city.Die();
     }
 
     public void ClearPath()
