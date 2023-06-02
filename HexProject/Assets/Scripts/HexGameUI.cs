@@ -41,7 +41,10 @@ public class HexGameUI : MonoBehaviour
         if (currentCell)
         {
             selectedUnit = currentCell.Unit;
-            selectedCity = currentCell.City;
+            if (!selectedUnit) 
+            {
+                selectedCity = currentCell.City;
+            }
         }
     }
 
@@ -65,7 +68,7 @@ public class HexGameUI : MonoBehaviour
                 }
             }
         }
-        if (selectedCity)
+        if (selectedCity && !selectedUnit)
         {
             OpenCityMenu();
         }
