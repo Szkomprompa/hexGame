@@ -135,6 +135,14 @@ public class MapEditor : MonoBehaviour
         }
     }
 
+    public void CreateUnit(HexCell cell)
+    {
+        if (cell && !cell.Unit)
+        {
+            grid.AddUnit(Instantiate(unitPrefab), cell, Random.Range(0f, 360f));
+        }
+    }
+
     void DestroyUnit()
     {
         HexCell cell = GetCellUnderCursor();

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class HexGameUI : MonoBehaviour
 {
@@ -8,6 +9,12 @@ public class HexGameUI : MonoBehaviour
     HexCell currentCell;
 
     HexUnit selectedUnit;
+
+    HexCity selectedCity;
+
+    public GameObject CityMenuPanel;
+
+    public MapEditor mapEditor;
 
     public void SetEditMode(bool toggle)
     {
@@ -34,6 +41,7 @@ public class HexGameUI : MonoBehaviour
         if (currentCell)
         {
             selectedUnit = currentCell.Unit;
+            selectedCity = currentCell.City;
         }
     }
 
@@ -56,6 +64,14 @@ public class HexGameUI : MonoBehaviour
                     DoPathfinding();
                 }
             }
+        }
+        if (selectedCity)
+        {
+            OpenCityMenu();
+        }
+        else
+        {
+            CloseCityMenu();
         }
     }
 
@@ -80,6 +96,30 @@ public class HexGameUI : MonoBehaviour
         {
             selectedUnit.Travel(grid.GetPath());    //selectedUnit.Location = currentCell;
             grid.ClearPath();
+        }
+    }
+
+    public void OpenCityMenu()
+    {
+        if (CityMenuPanel != null && !CityMenuPanel.activeSelf)
+        {
+            CityMenuPanel.SetActive(true);
+        }
+    }
+
+    public void CloseCityMenu()
+    {
+        if (CityMenuPanel != null && CityMenuPanel.activeSelf)
+        {
+            CityMenuPanel.SetActive(false);
+        }
+    }
+
+    public void AddUnit()
+    {
+        if (!currentCell.Unit)
+        {
+            mapEditor.CreateUnit(currentCell);
         }
     }
 }
