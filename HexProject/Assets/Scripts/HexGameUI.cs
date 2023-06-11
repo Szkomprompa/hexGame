@@ -16,6 +16,12 @@ public class HexGameUI : MonoBehaviour
 
     public MapEditor mapEditor;
 
+    public int money;
+    public int gain;
+
+    Text moneyText;
+    Text gainText;
+
     public void SetEditMode(bool toggle)
     {
         enabled = !toggle;
@@ -120,9 +126,10 @@ public class HexGameUI : MonoBehaviour
 
     public void AddUnit()
     {
-        if (!currentCell.Unit)
+        if (!currentCell.Unit && money >= 10)
         {
             mapEditor.CreateUnit(currentCell);
+            money -= 10;
         }
     }
 }

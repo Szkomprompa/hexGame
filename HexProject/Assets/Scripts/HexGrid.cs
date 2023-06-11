@@ -74,7 +74,7 @@ public class HexGrid : MonoBehaviour
         CreateCells();
     }
 
-    void CreateCell(int x, int z, int i, PerlinNoise heightNoise, PerlinNoise forestNoise)
+    void CreateCell(int x, int z, int i, PerlinNoise forestNoise)
     {
         Vector3 position;
         position.x = (x + z * 0.5f - z / 2) * (HexMetrics.innerRadius * 2f);
@@ -92,12 +92,12 @@ public class HexGrid : MonoBehaviour
         cell.uiRect = label.rectTransform;
 
         cell.SetType(HexTypeControler(noise[x, z]));
-        /*cell.SetType(HexTypeControler(heightNoise.CalculateNoise(x, z, cellCountX * chunkCountX, cellCountZ * chunkCountZ)));
+        
         if (cell.type == HexType.PLAINS && forestNoise.CalculateNoise(x, z, cellCountX * chunkCountX, cellCountZ * chunkCountZ) > 0.65f)
         {
             cell.SetType(HexType.WOODS);
         }
-        */
+        
         if (x > 0)
         {
             cell.SetNeighbor(HexDirection.W, cells[i - 1]);
@@ -197,18 +197,15 @@ public class HexGrid : MonoBehaviour
     void CreateCells()
     {
         cells = new HexCell[cellCountZ * cellCountX];
-        PerlinNoise heightNoise = new PerlinNoise();
-        heightNoise.SetRandomOffset();
-        heightNoise.SetScale(noiseScale);
         PerlinNoise forestNoise = new PerlinNoise();
-        forestNoise.SetRandomOffset();
+        forestNoise.SetRandomOffset(seed);
         forestNoise.SetScale(noiseScale);
 
         for (int z = 0, i = 0; z < cellCountZ; z++)
         {
             for (int x = 0; x < cellCountX; x++)
             {
-                CreateCell(x, z, i++, heightNoise, forestNoise);
+                CreateCell(x, z, i++, forestNoise);
             }
         }
     }
@@ -293,7 +290,17 @@ public class HexGrid : MonoBehaviour
     {
         cities.Add(city);
         city.transform.SetParent(transform, false);
+        location.owner = 0;
         city.Location = location;
+        // S¹siednie pola staj¹ siê w³asnoœci¹ gracza
+        for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++)
+        {
+            HexCell neighbor = location.GetNeighbor(d);
+            if (neighbor != null && neighbor.type != HexType.WATER)
+            {
+                neighbor.SetOwner(0);
+            }
+        }
     }
 
     public void RemoveCity(HexCity city)

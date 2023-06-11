@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PerlinNoise : MonoBehaviour
+public class PerlinNoise
 {
     public float scale = 20.0f;
     public float xOffset = 0f;
@@ -34,10 +34,11 @@ public class PerlinNoise : MonoBehaviour
         return perlinValue;
     }
 
-    public void SetRandomOffset()
+    public void SetRandomOffset(int seed)
     {
-        xOffset = Random.Range(0f, 999999f);
-        zOffset = Random.Range(0f, 999999f);
+        System.Random random = new System.Random(seed);
+        xOffset = random.Next(-100000, 100000);
+        zOffset = random.Next(-100000, 100000);
     }
 
     public void SetScale(float scale)

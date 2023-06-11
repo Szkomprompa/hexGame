@@ -34,6 +34,8 @@ public class HexCell : MonoBehaviour
 
     public int movementCost;
 
+    public int owner;
+
     public int Distance
     {
         get
@@ -184,5 +186,13 @@ public class HexCell : MonoBehaviour
     {
         Text label = uiRect.GetComponent<Text>();
         label.text = text;
+    }
+
+    public void SetOwner(int newOwner)
+    {
+        this.owner = newOwner;
+        Image highlight = uiRect.GetChild(1).GetComponent<Image>();
+        highlight.color = new Color(0.3f,1f,1f);
+        highlight.enabled = true;
     }
 }
