@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -19,8 +20,7 @@ public class HexGameUI : MonoBehaviour
     public int money;
     public int gain;
 
-    Text moneyText;
-    Text gainText;
+    public Text moneyText;
 
     public void SetEditMode(bool toggle)
     {
@@ -103,7 +103,18 @@ public class HexGameUI : MonoBehaviour
     {
         if (grid.HasPath)
         {
+            List<HexCell> path = grid.GetPath();
+            foreach (HexCell cell in path)
+            {
+                Debug.Log(cell.owner);
+                if (cell.owner != 0)
+                {
+                    gain += 1;
+                    cell.SetOwner(0);
+                }
+            }
             selectedUnit.Travel(grid.GetPath());    //selectedUnit.Location = currentCell;
+            UpdateMoney();
             grid.ClearPath();
         }
     }
@@ -128,8 +139,23 @@ public class HexGameUI : MonoBehaviour
     {
         if (!currentCell.Unit && money >= 10)
         {
-            mapEditor.CreateUnit(currentCell);
+            mapEditor.CreateUnit(currentCell);      // DO ZMIANY (BEZPOŒREDNIO Z HEXGRID)
             money -= 10;
         }
+    }
+
+    public void UpdateMoney()
+    {
+        if (gain == 0)
+        {
+            gain = grid.gain;
+        }
+        moneyText.text = "Monety: " + money + "  (+" + gain + ")";
+    }
+
+    public void AddMoney()
+    {
+        money += gain;
+        UpdateMoney();
     }
 }

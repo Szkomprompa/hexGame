@@ -4,6 +4,7 @@ using UnityEngine.UIElements;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.Build.Content;
 
 public class HexGrid : MonoBehaviour
 {
@@ -57,6 +58,9 @@ public class HexGrid : MonoBehaviour
 
     List<HexCity> cities = new List<HexCity>();
 
+    [HideInInspector]
+    public int gain;                        //PRZEROBIÆ
+
     void Awake()
     {
         cellCountX = chunkCountX * HexMetrics.chunkSizeX;
@@ -92,11 +96,11 @@ public class HexGrid : MonoBehaviour
         cell.uiRect = label.rectTransform;
 
         cell.SetType(HexTypeControler(noise[x, z]));
-        
+        /*
         if (cell.type == HexType.PLAINS && forestNoise.CalculateNoise(x, z, cellCountX * chunkCountX, cellCountZ * chunkCountZ) > 0.65f)
         {
             cell.SetType(HexType.WOODS);
-        }
+        }*/
         
         if (x > 0)
         {
@@ -122,6 +126,7 @@ public class HexGrid : MonoBehaviour
             }
         }
 
+        cell.owner = -1;
         AddCellToChunk(x, z, cell);
     }
 
@@ -290,7 +295,8 @@ public class HexGrid : MonoBehaviour
     {
         cities.Add(city);
         city.transform.SetParent(transform, false);
-        location.owner = 0;
+        location.SetOwner(0);
+        gain += 1;
         city.Location = location;
         // S¹siednie pola staj¹ siê w³asnoœci¹ gracza
         for (HexDirection d = HexDirection.NE; d <= HexDirection.NW; d++)
@@ -299,6 +305,7 @@ public class HexGrid : MonoBehaviour
             if (neighbor != null && neighbor.type != HexType.WATER)
             {
                 neighbor.SetOwner(0);
+                gain += 1;
             }
         }
     }

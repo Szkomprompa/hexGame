@@ -76,7 +76,6 @@ public class HexUnit : MonoBehaviour
                 transform.localPosition = Vector3.Lerp(a, b, t);
                 yield return null;
             }
-            pathToTravel[i].SetOwner(0);
         }
         orientation = transform.localRotation.eulerAngles.y;
     }
