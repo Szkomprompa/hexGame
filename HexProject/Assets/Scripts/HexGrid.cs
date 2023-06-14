@@ -61,6 +61,9 @@ public class HexGrid : MonoBehaviour
     [HideInInspector]
     public int gain;                        //PRZEROBIÆ
 
+    public HexCity cityPrefab;              //DODANE
+    public Text moneyText;                  //TO i POWY¯EJ POPRAWIC
+
     void Awake()
     {
         cellCountX = chunkCountX * HexMetrics.chunkSizeX;
@@ -76,6 +79,14 @@ public class HexGrid : MonoBehaviour
 
         CreateChunks();
         CreateCells();
+        System.Random random = new System.Random(seed);
+        int cityPosition;
+        do
+        {
+            cityPosition = random.Next(cellCountX * cellCountZ);
+        }
+        while (cells[cityPosition].type == HexType.WATER);
+        AddCity(Instantiate(cityPrefab), cells[cityPosition]);
     }
 
     void CreateCell(int x, int z, int i, PerlinNoise forestNoise)
@@ -293,6 +304,10 @@ public class HexGrid : MonoBehaviour
 
     public void AddCity(HexCity city, HexCell location)
     {
+        if (location.type == HexType.WATER)
+        {
+            return;
+        }
         cities.Add(city);
         city.transform.SetParent(transform, false);
         location.SetOwner(0);
@@ -308,6 +323,15 @@ public class HexGrid : MonoBehaviour
                 gain += 1;
             }
         }
+        if (cities.Count == 1)
+        {
+            UpdateMoney();
+        }
+    }
+
+    public void UpdateMoney()
+    {
+        moneyText.text = "Monety: 0  (+" + gain + ")";
     }
 
     public void RemoveCity(HexCity city)

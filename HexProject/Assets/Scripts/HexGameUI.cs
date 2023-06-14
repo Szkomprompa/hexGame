@@ -14,6 +14,8 @@ public class HexGameUI : MonoBehaviour
     HexCity selectedCity;
 
     public GameObject CityMenuPanel;
+    public GameObject EditMenuPanel;
+    public GameObject GameMenuPanel;
 
     public MapEditor mapEditor;
 
@@ -27,6 +29,19 @@ public class HexGameUI : MonoBehaviour
         enabled = !toggle;
         grid.ShowUI(!toggle);
         grid.ClearPath();
+        OpenEditMenu();
+    }
+
+    public void OpenEditMenu()
+    {
+        if (EditMenuPanel != null && !EditMenuPanel.activeSelf)
+        {
+            EditMenuPanel.SetActive(true);
+        }
+        else if (EditMenuPanel != null && EditMenuPanel.activeSelf)
+        {
+            EditMenuPanel.SetActive(false);
+        }
     }
 
     bool UpdateCurrentCell()
@@ -155,6 +170,10 @@ public class HexGameUI : MonoBehaviour
 
     public void AddMoney()
     {
+        if (gain == 0)
+        {
+            gain = grid.gain;
+        }
         money += gain;
         UpdateMoney();
     }

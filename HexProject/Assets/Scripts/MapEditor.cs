@@ -15,6 +15,9 @@ public class MapEditor : MonoBehaviour
     //  HexCell previousCell, searchFromCell, searchToCell;
     HexCell previousCell;
 
+    public GameObject EditMenuPanel;
+    public GameObject GameMenuPanel;        //Te dwie do sprawdzenia
+
     void Awake()
     {
         SelectType(0);
@@ -119,6 +122,19 @@ public class MapEditor : MonoBehaviour
     public void SetEditMode(bool toggle)
     {
         enabled = toggle;
+        //CloseEditMenu();                      Do zmiany Odpowiednie menu do odpowiedniego trybu
+    }
+
+    public void CloseEditMenu()
+    {
+        if (EditMenuPanel != null && EditMenuPanel.activeSelf)
+        {
+            EditMenuPanel.SetActive(false);
+        }
+        if (GameMenuPanel != null && !GameMenuPanel.activeSelf)
+        {
+            GameMenuPanel.SetActive(true);
+        }
     }
 
     HexCell GetCellUnderCursor()
